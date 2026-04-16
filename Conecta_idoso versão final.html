@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conecta Idoso</title>
+
+<style>
+body {
+    margin: 0;
+    background: #e9eef3;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 375px;
+    height: 720px;
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+header {
+    background: linear-gradient(135deg, #2d89ef, #1b5fbf);
+    color: white;
+    padding: 18px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.screen {
+    flex: 1;
+    padding: 18px;
+    display: none;
+    overflow-y: auto;
+}
+
+.active {
+    display: block;
+}
+
+.card {
+    background: #f4f6f9;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 10px;
+    background: #2d89ef;
+    color: white;
+    cursor: pointer;
+}
+
+.back {
+    background: #999;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.navbar {
+    height: 60px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+}
+.navbar div {
+    cursor: pointer;
+    text-align: center;
+}
+.feedback {
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>💙 Conecta Idoso</header>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+    <h3>Bem-vindo!</h3>
+    <div class="card">
+        Conectando voluntários a asilos em Rio Grande - RS
+    </div>
+    <button onclick="showScreen('asilos')">🏠 Ver Asilos</button>
+    <button onclick="showScreen('visita')">🤝 Agendar Visita</button>
+    <button onclick="showScreen('doacao')">❤️ Fazer Doação</button>
+</div>
+
+<!-- ASILOS -->
+<div id="asilos" class="screen">
+    <h3>Asilos em Rio Grande - RS</h3>
+
+    <div class="card">
+        <b>Lar do Idoso: Monte Sião</b><br>
+        R. Carlos Gomes, 658 - Centro, Rio Grande - RS, 96200-460
+    </div>
+
+    <button class="back" onclick="showScreen('home')">Voltar</button>
+</div>
+
+<!-- DOAÇÃO -->
+<div id="doacao" class="screen">
+    <h3>Selecionar Asilo</h3>
+
+    <select id="asiloDoacao">
+        <option>Lar do Idoso: Monte Sião</option>
+    </select>
+
+    <h3>Itens para Doação</h3>
+
+    <label><input type="checkbox"> Fraldas geriátricas</label><br>
+    <label><input type="checkbox"> Produtos de higiene</label><br>
+    <label><input type="checkbox"> Roupas</label><br>
+    <label><input type="checkbox"> Alimentos</label><br>
+    <label><input type="checkbox"> Medicamentos básicos</label><br>
+    <label><input type="checkbox"> Cobertores</label><br>
+
+    <button onclick="confirmarDoacao()">Confirmar Doação</button>
+
+    <div id="feedbackDoacao"></div>
+
+    <button class="back" onclick="showScreen('home')">Voltar</button>
+</div>
+
+<!-- VISITA -->
+<div id="visita" class="screen">
+    <h3>Agendar Visita</h3>
+
+    <input type="text" id="nome" placeholder="Seu nome">
+    
+    <select id="asiloVisita">
+        <option>Lar do Idoso: Monte Sião</option>
+    </select>
+
+    <input type="date" id="data">
+    <input type="time" id="hora">
+
+    <button onclick="confirmarVisita()">Confirmar Visita</button>
+
+    <div id="feedbackVisita"></div>
+
+    <button class="back" onclick="showScreen('home')">Voltar</button>
+</div>
+
+<div class="navbar">
+    <div onclick="showScreen('home')">🏠<br>Início</div>
+    <div onclick="showScreen('asilos')">📍<br>Asilos</div>
+    <div onclick="showScreen('visita')">🤝<br>Visita</div>
+    <div onclick="showScreen('doacao')">❤️<br>Doar</div>
+</div>
+
+</div>
+
+<script>
+function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function confirmarDoacao(){
+    let asilo = document.getElementById("asiloDoacao").value;
+    document.getElementById("feedbackDoacao").innerHTML =
+        "<div class='feedback'>✅ Doação registrada!<br>Por favor, entregue os itens no " 
+        + asilo + " - R. Carlos Gomes, 658 - Centro, Rio Grande - RS.<br>Obrigado pela solidariedade ❤️</div>";
+}
+
+function confirmarVisita(){
+    let nome = document.getElementById("nome").value;
+    let asilo = document.getElementById("asiloVisita").value;
+    let data = document.getElementById("data").value;
+    let hora = document.getElementById("hora").value;
+
+    document.getElementById("feedbackVisita").innerHTML =
+        "<div class='feedback'>📅 Visita agendada com sucesso!<br>" +
+        "Nome: " + nome + "<br>" +
+        "Local: " + asilo + " - R. Carlos Gomes, 658 - Centro, Rio Grande/RS<br>" +
+        "Data: " + data + "<br>" +
+        "Horário: " + hora + "<br><br>Compareça no horário marcado.</div>";
+}
+</script>
+
+</body>
+</html>
