@@ -75,6 +75,12 @@ input, select {
     margin-top: 6px;
     border-radius: 8px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+input.erro {
+    border: 2px solid #e74c3c;
+    background: #fff0f0;
 }
 
 .navbar {
@@ -92,6 +98,14 @@ input, select {
 }
 .feedback {
     background: #d4edda;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+}
+.erro-msg {
+    background: #f8d7da;
+    color: #721c24;
     padding: 10px;
     border-radius: 8px;
     margin-top: 10px;
@@ -186,6 +200,10 @@ input, select {
 function showScreen(id){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    // Limpa feedbacks ao trocar de tela
+    document.getElementById("feedbackVisita").innerHTML = "";
+    // Remove marcações de erro
+    document.querySelectorAll('input.erro').forEach(el => el.classList.remove('erro'));
 }
 
 function confirmarDoacao(){
@@ -196,16 +214,54 @@ function confirmarDoacao(){
 }
 
 function confirmarVisita(){
-    let nome = document.getElementById("nome").value;
+    let nome  = document.getElementById("nome").value.trim();
     let asilo = document.getElementById("asiloVisita").value;
-    let data = document.getElementById("data").value;
-    let hora = document.getElementById("hora").value;
+    let data  = document.getElementById("data").value;
+    let hora  = document.getElementById("hora").value;
+
+    // Remove marcações de erro anteriores
+    ["nome","data","hora"].forEach(id => document.getElementById(id).classList.remove("erro"));
+
+    let erros = [];
+
+    // Validação: nome não pode ser vazio
+    if(!nome){
+        erros.push("⚠️ Por favor, informe o seu nome.");
+        document.getElementById("nome").classList.add("erro");
+    }
+    // Validação: nome não pode conter números
+    else if(/\d/.test(nome)){
+        erros.push("⚠️ O nome não pode conter números. Digite apenas letras.");
+        document.getElementById("nome").classList.add("erro");
+    }
+
+    // Validação: data obrigatória
+    if(!data){
+        erros.push("⚠️ Por favor, selecione a data da visita.");
+        document.getElementById("data").classList.add("erro");
+    }
+
+    // Validação: hora obrigatória
+    if(!hora){
+        erros.push("⚠️ Por favor, informe o horário da visita.");
+        document.getElementById("hora").classList.add("erro");
+    }
+
+    if(erros.length > 0){
+        document.getElementById("feedbackVisita").innerHTML =
+            "<div class='erro-msg'>" + erros.join("<br>") + "</div>";
+        return;
+    }
+
+    // Formatar data para exibição
+    let [ano, mes, dia] = data.split("-");
+    let dataFormatada = dia + "/" + mes + "/" + ano;
 
     document.getElementById("feedbackVisita").innerHTML =
         "<div class='feedback'>📅 Visita agendada com sucesso!<br>" +
         "Nome: " + nome + "<br>" +
         "Local: " + asilo + " - R. Carlos Gomes, 658 - Centro, Rio Grande/RS<br>" +
-        "Data: " + data + "<br>" +
+        "Data: " + dataFormatada + "<br>" +
         "Horário: " + hora + "<br><br>Compareça no horário marcado.</div>";
 }
 </script>
